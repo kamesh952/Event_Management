@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors({
-  origin: 'https://event-management-gs9r.onrender.com/'
+  origin: 'https://event-management-gs9r.onrender.com'
 }));
 app.use(express.json());
 app.use(morgan('dev')); // Logs requests to console
