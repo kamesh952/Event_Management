@@ -10,14 +10,30 @@ import userRoutes from './routes/userRoutes.js';
 import eventRoutes from './routes/eventRoutes.js';
 import bookingRoutes from './routes/bookingRoutes.js';
 
-// Load environment variables
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// ✅ Define allowed origins
+const allowedOrigins = [
+  'https://event-management-gs9r.onrender.com',
+  'http://localhost:3000'
+];
+
+// ✅ Configure CORS middleware
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
+
 // Middleware
-app.use(cors()); // ✅ Allow all origins (CORS disabled)
 app.use(express.json());
 app.use(morgan('dev')); // Logs requests to console
 
@@ -41,7 +57,7 @@ app.use((err, req, res, next) => {
 db.sequelize.authenticate()
   .then(() => {
     console.log('✅ Database authenticated successfully');
-    return db.sequelize.sync(); // You can use { force: true } or { alter: true } here
+    return db.sequelize.sync(); // use { force: true } or { alter: true } if needed
   })
   .then(() => {
     console.log('✅ Database synced');
